@@ -147,6 +147,7 @@ def _create_transformer_encoder() -> TransformerEncoderFusion:
         add_pooled_text_to_img_feat=False,
         pool_text_with_mask=True,
     )
+
     return encoder
 
 
@@ -359,7 +360,7 @@ def _create_tracker_maskmem_backbone():
         mask_downsampler=mask_downsampler,
         fuser=fuser,
     )
-
+    
     return maskmem_backbone
 
 
@@ -765,6 +766,9 @@ def build_sam3_video_model(
             image_std=(0.5, 0.5, 0.5),
             compile_model=compile,
         )
+
+    for p in model.parameters():
+        p.requires_grad = False
 
     # Load checkpoint if provided
     if load_from_HF and checkpoint_path is None:
