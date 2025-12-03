@@ -626,6 +626,9 @@ def build_sam3_image_model(
         inst_predictor,
         eval_mode,
     )
+    for p in model.parameters():
+        p.requires_grad = False
+        
     if load_from_HF and checkpoint_path is None:
         checkpoint_path = download_ckpt_from_hf()
     # Load checkpoint if provided
