@@ -644,8 +644,8 @@ def build_sam3_image_model(
     for p in dot_prod_scoring.parameters():
         p.requires_grad = False
 
-    for p in inst_predictor.parameters():
-        p.requires_grad = False
+    # for p in inst_predictor.parameters():
+    #     p.requires_grad = False
 
     if load_from_HF and checkpoint_path is None:
         checkpoint_path = download_ckpt_from_hf()
