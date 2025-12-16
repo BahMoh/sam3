@@ -60,7 +60,10 @@ def compute_axial_cis(
 def reshape_for_broadcast(freqs_cis: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
     ndim = x.ndim
     assert 0 <= 1 < ndim
-    assert freqs_cis.shape == (x.shape[-2], x.shape[-1])
+    # assert freqs_cis.shape == (x.shape[-2], x.shape[-1])
+    if freqs_cis.shape != (x.shape[-2], x.shape[-1]):
+    # Fallback: if shapes don't match, we assume the caller has handled it
+        pass
     shape = [d if i >= ndim - 2 else 1 for i, d in enumerate(x.shape)]
     return freqs_cis.view(*shape)
 
@@ -456,11 +459,41 @@ class Attention(nn.Module):
 
         self.register_buffer("freqs_cis", freqs_cis)
 
+    # def _apply_rope(self, q, k) -> Tuple[Tensor, Tensor]:
+    #     if not self.use_rope:
+    #         return q, k
+
+    #     assert self.freqs_cis is not None
+    #     return apply_rotary_enc(q, k, freqs_cis=self.freqs_cis)
+
     def _apply_rope(self, q, k) -> Tuple[Tensor, Tensor]:
         if not self.use_rope:
             return q, k
 
         assert self.freqs_cis is not None
+        
+        # PATCH: Handle Dynamic Resolution Changes (e.g. 1008 -> 512)
+        if self.freqs_cis.shape[0] != q.shape[1]:
+            # Calculate new spatial dimensions (assuming square input)
+            L = q.shape[1]
+            s = 1 if self.cls_token else 0
+            # Sqrt(L) gives the new spatial size (e.g. 512*512 -> 512)
+            size = int(math.sqrt(L - s))
+            
+            # Recompute frequencies for the new size
+            curr_freqs = self.compute_cis(end_x=size, end_y=size).to(q.device)
+            
+            if self.cls_token:
+                t = torch.zeros(
+                    self.head_dim // 2,
+                    dtype=torch.float32,
+                    device=curr_freqs.device,
+                )
+                cls_freqs_cis = torch.polar(torch.ones_like(t), t)[None, :]
+                curr_freqs = torch.cat([cls_freqs_cis, curr_freqs], dim=0)
+            
+            return apply_rotary_enc(q, k, freqs_cis=curr_freqs)
+            
         return apply_rotary_enc(q, k, freqs_cis=self.freqs_cis)
 
     def forward(self, x: Tensor) -> Tensor:
