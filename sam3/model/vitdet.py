@@ -482,8 +482,6 @@ class Attention(nn.Module):
         q, k, v = qkv.permute(2, 0, 3, 1, 4).unbind(0)
 
         # handle rope and rel pos embeddings
-        print(f"q shape: {q.shape}")
-        print(f"k shape: {k.shape}")
         q, k = self._apply_rope(q, k)
         if self.use_rel_pos:
             q, k = concat_rel_pos(
