@@ -215,10 +215,15 @@ class COCO_FROM_JSON:
                 annotation["id"] = len(annotations)
                 annotation["object_id"] = annotation["id"]
                 annotation["is_crowd"] = ann["iscrowd"]
-
-                normalized_boxes = convert_boxlist_to_normalized_tensor(
-                    [ann["bbox"]], width, height
-                )
+                
+                # CHANGE THIS
+                raw_bbox = ann["bbox"] # [x, y, w, h]
+                xyxy_bbox = [raw_bbox[0], raw_bbox[1], raw_bbox[0] + raw_bbox[2], raw_bbox[1] + raw_bbox[3]]
+                normalized_boxes = convert_boxlist_to_normalized_tensor([xyxy_bbox], width, height)
+                
+                # normalized_boxes = convert_boxlist_to_normalized_tensor(
+                #     [ann["bbox"]], width, height
+                # )
                 bbox = normalized_boxes[0]
 
                 annotation["area"] = (bbox[2] * bbox[3]).item()
