@@ -220,7 +220,7 @@ class COCO_FROM_JSON:
                 raw_bbox = ann["bbox"] # [x, y, w, h]
                 xyxy_bbox = [raw_bbox[0], raw_bbox[1], raw_bbox[0] + raw_bbox[2], raw_bbox[1] + raw_bbox[3]]
                 normalized_boxes = convert_boxlist_to_normalized_tensor([xyxy_bbox], width, height)
-                
+
                 # normalized_boxes = convert_boxlist_to_normalized_tensor(
                 #     [ann["bbox"]], width, height
                 # )
@@ -234,6 +234,7 @@ class COCO_FROM_JSON:
                     and ann["segmentation"] is not None
                     and ann["segmentation"] != []
                 ):
+                    print("we are in for converting polygons to masks")
                     annotation["segmentation"] = ann_to_rle(
                         ann["segmentation"], im_info=image_info
                     )
