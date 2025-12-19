@@ -228,7 +228,7 @@ class COCO_FROM_JSON:
 
                 annotation["area"] = (bbox[2] * bbox[3]).item()
                 annotation["bbox"] = bbox
-
+                print("Annotation is:", ann["segmentation"])
                 if (
                     "segmentation" in ann
                     and ann["segmentation"] is not None
