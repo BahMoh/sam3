@@ -78,6 +78,8 @@ def ann_to_rle(segm, im_info: Dict) -> Dict:
     Returns:
         RLE encoded segmentation
     """
+
+    print("check 1")
     h, w = im_info["height"], im_info["width"]
 
     if isinstance(segm, list):
@@ -158,6 +160,7 @@ class COCO_FROM_JSON:
         Returns:
             Tuple of (queries, annotations) lists
         """
+        print("check 2")
         img_idx = idx // len(self.category_chunks)
         chunk_idx = idx % len(self.category_chunks)
         cat_chunk = self.category_chunks[chunk_idx]
@@ -179,7 +182,7 @@ class COCO_FROM_JSON:
             "input_points": None,
             "is_exhaustive": True,
         }
-
+        
         annot_template = {
             "image_id": 0,
             "bbox": None,  # Normalized bbox in xywh
@@ -228,13 +231,12 @@ class COCO_FROM_JSON:
 
                 annotation["area"] = (bbox[2] * bbox[3]).item()
                 annotation["bbox"] = bbox
-                print("Annotation is:", ann["segmentation"])
+                
                 if (
                     "segmentation" in ann
                     and ann["segmentation"] is not None
                     and ann["segmentation"] != []
                 ):
-                    print("we are in for converting polygons to masks")
                     annotation["segmentation"] = ann_to_rle(
                         ann["segmentation"], im_info=image_info
                     )
