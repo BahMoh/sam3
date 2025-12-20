@@ -626,23 +626,23 @@ def build_sam3_image_model(
         inst_predictor,
         eval_mode,
     )
-    # for p in backbone.parameters():
-    #     p.requires_grad = False
+    for p in backbone.parameters():
+        p.requires_grad = False
 
-    # for p in input_geometry_encoder.parameters():
-    #     p.requires_grad = False
+    for p in input_geometry_encoder.parameters():
+        p.requires_grad = False
 
-    # # Freeze the transformer parameters 
-    # for p in transformer.parameters():
-    #     p.requires_grad = False
+    # Freeze the transformer parameters 
+    for p in transformer.parameters():
+        p.requires_grad = False
 
-    # # Unfreeze the decoder layers 4 and 5!
-    # for i in [4, 5]:
-    #     for p in model.transformer.decoder.layers[i].parameters():
-    #         p.requires_grad = True
+    # Unfreeze the decoder layers 4 and 5!
+    for i in [4, 5]:
+        for p in model.transformer.decoder.layers[i].parameters():
+            p.requires_grad = True
 
-    # for p in dot_prod_scoring.parameters():
-    #     p.requires_grad = False
+    for p in dot_prod_scoring.parameters():
+        p.requires_grad = False
 
 
 
