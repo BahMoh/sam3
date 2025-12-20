@@ -496,8 +496,6 @@ class Trainer:
         phase: str,
     ):
         key, batch = batch.popitem()
-        print("batch.shape", batch.shape)
-        print("key.shape", key.shape)
         batch = copy_data_to_device(batch, self.device, non_blocking=True)
 
         find_stages = model(batch)
