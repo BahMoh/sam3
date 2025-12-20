@@ -496,6 +496,8 @@ class Trainer:
         phase: str,
     ):
         key, batch = batch.popitem()
+        print(batch.shape)
+        print(key.shape)
         batch = copy_data_to_device(batch, self.device, non_blocking=True)
 
         find_stages = model(batch)
@@ -804,7 +806,7 @@ class Trainer:
             # batch = batch.to(
             #     self.device, non_blocking=True
             # )  # move tensors in a tensorclass
-
+            
             try:
                 self._run_step(batch, phase, loss_mts, extra_loss_mts)
 
