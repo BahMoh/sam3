@@ -18,14 +18,18 @@ class DummyLoss(torch.nn.Module):
         device: str = "cuda",
         **kwargs,
     ):
+    
+        print("__init__: Still a dummy")
         super().__init__()
         self.core_loss_key = core_loss_key
         self.device = torch.device(device)
 
     def forward(self, *args, **kwargs):
+        print("forward: Still a dummy")
         return {self.core_loss_key: torch.tensor(0.0, device=self.device)}
 
     def accumulate(self, out_dict):
+        print("accumulate: Still a dummy")
         """
         Called by iterative losses.
         """
