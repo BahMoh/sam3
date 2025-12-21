@@ -250,7 +250,6 @@ class CustomCocoDetectionAPI(VisionDataset):
         self.ids = torch.as_tensor(ids_list, dtype=torch.long)
 
     def __getitem__(self, index: int) -> Datapoint:
-        print(f"Loading image {idx}: found {len(datapoint.find_queries)} queries")
         return self._load_datapoint(index)
 
     def _load_datapoint(self, index: int) -> Datapoint:
@@ -484,7 +483,6 @@ class Sam3ImageDataset(CustomCocoDetectionAPI):
         self._MAX_RETRIES = 100
 
     def __getitem__(self, idx):
-        print(f"Loading image {idx}: found {len(datapoint.find_queries)} queries")
         return self.__orig_getitem__(idx)
 
     def __orig_getitem__(self, idx):
