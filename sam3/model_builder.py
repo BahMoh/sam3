@@ -651,8 +651,9 @@ def build_sam3_image_model(
         print("Loading model from condition if load_from_HF and checkpoint_path is None!")
     # Load checkpoint if provided
     if checkpoint_path is not None:
+        print(f"Loading model from: {checkpoint_path}")
         _load_checkpoint(model, checkpoint_path)
-        print("Loading model from condition if checkpoint_path is not None!")
+        print("Loading model from condition if checkpoint_path is not None!, checkpoint_path")
 
     # Setup device and mode
     model = _setup_device_and_mode(model, device, eval_mode)
